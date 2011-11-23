@@ -1,0 +1,17 @@
+this is a movie player and tweet machine. a public information appliance.
+this OF app used in conjunction with some shell script and motion which make timelapse movies each day. broadcasterproject.wordpress.com for more info.
+thanks alex olwal and dave(leaflabs).
+
+uses TWITCURL
+http://code.google.com/p/twitcurl/wiki/WikiHowToUseTwitcurlLibrary
+i did a make install on the twitcurl 
+
+i did not do the g++ link.
+
+i added a line to the codeblocks config.make file(see sidebar)
+USER_LIBS = -ltwitcurl
+
+visit dev.twitter.com to get developer keys.
+first time you run it, you will have to go to website and get number code and type that back into the app, it will run autonomously after that. there will be some .txt files written to the bin directory.
+
+dont forget to edit the addons.make as needed.
