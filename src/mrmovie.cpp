@@ -1,6 +1,5 @@
 #include "mrmovie.h"
 #include "twitcurl.h"
-
 #include <iostream>
 #include <fstream>
 
@@ -17,10 +16,18 @@ void mrmovie::setup()
     load(); // loads a movie
     twitSetup(); //sets up twitter oauth connection
     proFont.loadFont("ProFontWindows.ttf", 14);
-loadedImageAtS=0.0;
-
+    loadedImageAtS=0.0;
 	alpha=65;
-ofBackground(0,0,0);
+    ofBackground(0,0,0);
+    initImages();
+    xwalk=700;
+    ywalk=5;
+}
+
+void mrmovie::initImages()
+{
+ //
+//
 }
 
 void mrmovie::load()
@@ -83,17 +90,20 @@ void mrmovie::update()
         next();
 
     if ((ofGetElapsedTimef()-loadedAtS) > 5000.0)
-        load();
+          load();
+
 
    if ((ofGetElapsedTimef()-loadedImageAtS) > 15.0)
-        loadImageLocal();
-    //loadImageLocal();
+           loadImageLocal();
+
+
+
 }
 
 void mrmovie::loadImageLocal()
 {
 recentImages[imageCounter].loadImage("/tmp/motion/lastsnap.jpg");
-imageCounter=(imageCounter+1)%10;
+imageCounter=(imageCounter+1)%5;
 loadedImageAtS = ofGetElapsedTimef();
 }
 
@@ -103,7 +113,7 @@ void mrmovie::draw()
 	//ofBackground(0,0,0);
     ofSetColor(ofColor::white);
 
-    movie.draw(20, 40);
+    movie.draw(05, 40);
 
     //ofDrawBitmapString(files[currentFile], 10,10);
     //proFont.drawString(" videos are uploaded daily to http://youtube.com/allasiatwvee", 10,10);
@@ -112,7 +122,8 @@ void mrmovie::draw()
     ofDrawBitmapString("type and press enter to send a tweet to http://twitter.com/allasiatwvee",15,580);
     drawMsg();
 
-//recentImages[1].draw(680,5,400,300);
+recentImages[max(1,imageCounter)].draw(680,5,400,300);
+//recentImages[max(1,imageCounter)].draw(xwalk,ywalk,400,300);
 
 }
 
@@ -356,15 +367,22 @@ void mrmovie::poststatus(string statusMsg)
     {
         twitterObj.getLastWebResponse( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusUpdate web response:\n%s\n", replyMsg.c_str() );
+         ofSetColor(ofColor::white);
+
+        ofDrawBitmapString("yeah, you just tweeted this msg:" +tmpStr,15,660);
     }
     else
     {
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
+         ofSetColor(ofColor::white);
+
+        ofDrawBitmapString("i can't tell you why buy that tweet failed to make it",15,660);
     }
 
 
 getUserTimeline();
+
 
 
 }

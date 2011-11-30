@@ -23,6 +23,9 @@ class mrmovie: public ofBaseApp
             void loadImageLocal();
              void getUserTimeline();
 
+
+
+void initImages();
         ofxXmlSettings XML;
 
         string path;
@@ -54,6 +57,9 @@ class mrmovie: public ofBaseApp
         int                 imageCounter;
 
     int alpha; // 1 to 99
+
+    int xwalk;
+    int ywalk;
 
 };
 
