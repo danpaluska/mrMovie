@@ -20,6 +20,8 @@ class mrmovie: public ofBaseApp
 			void poststatus();
 			void poststatus(string shortMsg);
         void drawMsg();
+            void loadImageLocal();
+             void getUserTimeline();
 
         ofxXmlSettings XML;
 
@@ -28,6 +30,8 @@ class mrmovie: public ofBaseApp
         void load();
         vector<string> files;
         string shortMsg;
+        string timeLine[25];
+        ofTrueTypeFont		proFont;
 
         int currentFile;
         ofVideoPlayer 		movie;
@@ -37,5 +41,19 @@ class mrmovie: public ofBaseApp
         void set(int i);
 
         long loadedAtS;
+        long loadedImageAtS;
+
+        ofVideoGrabber 		vidGrabber;
+		unsigned char * 	videoInverted;
+		unsigned char * 	videoLast;
+		unsigned char * 	videoNminus2;
+		ofTexture			videoTexture;
+		ofTexture			videoTexture2;
+		ofTexture			videoTexture3;
+        ofImage             recentImages[10];
+        int                 imageCounter;
+
+    int alpha; // 1 to 99
+
 };
 

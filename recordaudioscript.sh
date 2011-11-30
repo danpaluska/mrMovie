@@ -1,0 +1,1 @@
+/home/allasiabroadcaster/recordaudio.sh

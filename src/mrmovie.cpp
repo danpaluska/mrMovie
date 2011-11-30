@@ -1,6 +1,9 @@
 #include "mrmovie.h"
 #include "twitcurl.h"
 
+#include <iostream>
+#include <fstream>
+
 mrmovie::mrmovie(string path)
 {
     this->path = path;
@@ -11,10 +14,13 @@ void mrmovie::setup()
 {
     shortMsg="";
     currentFile=0;
-    load();
-    twitSetup();
-   // poststatus();
+    load(); // loads a movie
+    twitSetup(); //sets up twitter oauth connection
+    proFont.loadFont("ProFontWindows.ttf", 14);
+loadedImageAtS=0.0;
 
+	alpha=65;
+ofBackground(0,0,0);
 }
 
 void mrmovie::load()
@@ -78,21 +84,35 @@ void mrmovie::update()
 
     if ((ofGetElapsedTimef()-loadedAtS) > 5000.0)
         load();
+
+   if ((ofGetElapsedTimef()-loadedImageAtS) > 15.0)
+        loadImageLocal();
+    //loadImageLocal();
+}
+
+void mrmovie::loadImageLocal()
+{
+recentImages[imageCounter].loadImage("/tmp/motion/lastsnap.jpg");
+imageCounter=(imageCounter+1)%10;
+loadedImageAtS = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
 void mrmovie::draw()
 {
-	ofBackground(0,0,0);
+	//ofBackground(0,0,0);
     ofSetColor(ofColor::white);
 
     movie.draw(20, 40);
 
     //ofDrawBitmapString(files[currentFile], 10,10);
+    //proFont.drawString(" videos are uploaded daily to http://youtube.com/allasiatwvee", 10,10);
     ofDrawBitmapString(" videos are uploaded daily to http://youtube.com/allasiatwvee", 10,10);
     ofDrawBitmapString(" <    >  < > <> use the arrrow keys to jump to next/previous movie <> < >  <    >", 10,25);
     ofDrawBitmapString("type and press enter to send a tweet to http://twitter.com/allasiatwvee",15,580);
     drawMsg();
+
+//recentImages[1].draw(680,5,400,300);
 
 }
 
@@ -246,6 +266,55 @@ void mrmovie::twitSetup()
     }
     /* OAuth flow ends */
 
+getUserTimeline();
+
+
+
+}
+
+void mrmovie::getUserTimeline()
+{
+
+  /* Get user timeline */
+  std::string replyMsg;
+    replyMsg = "";
+    printf( "\nGetting user timeline\n" );
+    if( twitterObj.timelineUserGet( false, false, 25 ) )
+    {
+        twitterObj.getLastWebResponse( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );
+    }
+    else
+    {
+        twitterObj.getLastCurlError( replyMsg );
+        printf( "\ntwitterClient:: twitCurl::timelineUserGet error:\n%s\n", replyMsg.c_str() );
+    }
+
+    // write to file
+    ofstream outfile ("data/tweetlist2.xml");
+
+  // >> i/o operations here <<
+    outfile << replyMsg.c_str();
+
+    outfile.close();
+XML.clear();
+bool isFileLoaded = XML.loadFile("tweetlist2.xml");
+cout << isFileLoaded << " that the file was loaded " << endl;
+
+
+//bool isBufferLoaded = XML.loadFromBuffer(replyMsg.c_str());
+//cout << isBufferLoaded << " that the string buffer was loaded ";
+int numTags = XML.getNumTags("statuses:status");
+cout << numTags << " num tags---" << endl;
+XML.pushTag("statuses");
+	for(int i = 0; i < 25; i++)
+	{
+
+	timeLine[i] = XML.getValue("status:created_at","--",i) + " " +XML.getValue("status:text","--",i);
+	//ofDrawBitmapString(timeLine[i],15,680+15*i);
+	cout << timeLine[i] << endl;
+	}
+
 
 }
 void mrmovie::poststatus()
@@ -271,6 +340,7 @@ void mrmovie::poststatus()
     }
 
 
+
 }
 void mrmovie::poststatus(string statusMsg)
 {
@@ -292,6 +362,9 @@ void mrmovie::poststatus(string statusMsg)
         twitterObj.getLastCurlError( replyMsg );
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
+
+
+getUserTimeline();
 
 
 }
@@ -317,4 +390,10 @@ void mrmovie::drawMsg()
 
     string tmp = "you have " + ofToString(left) + " characters left.";
     ofDrawBitmapString(tmp,15,640);
+
+     for(int i = 0; i < 20; i++)
+	{
+	ofDrawBitmapString(timeLine[i],15,680+15*i);
+	}
+
 }
