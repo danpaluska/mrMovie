@@ -79,6 +79,7 @@ void mrmovie::set(int i)
     movie.closeMovie();
     movie.loadMovie(files[currentFile]);
     movie.play();
+    //ofSleepMillis(100);
 }
 
 //--------------------------------------------------------------
@@ -122,7 +123,7 @@ void mrmovie::draw()
     ofDrawBitmapString("type and press enter to send a tweet to http://twitter.com/allasiatwvee",15,580);
     drawMsg();
 
-recentImages[max(1,imageCounter)].draw(680,5,400,300);
+//recentImages[max(1,imageCounter)].draw(680,5,400,300);
 //recentImages[max(1,imageCounter)].draw(xwalk,ywalk,400,300);
 
 }
@@ -153,6 +154,7 @@ void mrmovie::keyPressed  (int key)
     string s = shortMsg;
      if((key == 10) ||  (key == 13)){ // RETURN
     // send the message, clear the messafe
+    postingFlag=true;
     poststatus(s);
     shortMsg="";
     }
@@ -293,7 +295,7 @@ void mrmovie::getUserTimeline()
     if( twitterObj.timelineUserGet( false, false, 25 ) )
     {
         twitterObj.getLastWebResponse( replyMsg );
-        printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );
+        //printf( "\ntwitterClient:: twitCurl::timelineUserGet web response:\n%s\n", replyMsg.c_str() );
     }
     else
     {
@@ -350,7 +352,7 @@ void mrmovie::poststatus()
         printf( "\ntwitterClient:: twitCurl::statusUpdate error:\n%s\n", replyMsg.c_str() );
     }
 
-
+postingFlag=false;
 
 }
 void mrmovie::poststatus(string statusMsg)
@@ -380,7 +382,7 @@ void mrmovie::poststatus(string statusMsg)
         ofDrawBitmapString("i can't tell you why buy that tweet failed to make it",15,660);
     }
 
-
+postingFlag=false;
 getUserTimeline();
 
 

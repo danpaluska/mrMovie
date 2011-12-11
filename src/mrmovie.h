@@ -9,7 +9,8 @@ class mrmovie: public ofBaseApp
 {
 	public:
 
-        mrmovie(string director = "/home/allasiabroadcaster/Videos/copies/");
+        //mrmovie(string director = "/home/allasiabroadcaster/Videos/copies/");
+        mrmovie(string director = "/home/allasiabroadcaster/Videos/Temp/");
 		void setup();
 		void update();
 		void draw();
@@ -34,6 +35,7 @@ void initImages();
         vector<string> files;
         string shortMsg;
         string timeLine[25];
+    bool postingFlag;
         ofTrueTypeFont		proFont;
 
         int currentFile;
@@ -60,6 +62,7 @@ void initImages();
 
     int xwalk;
     int ywalk;
+
 
 };
 
